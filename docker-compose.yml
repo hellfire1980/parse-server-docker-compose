@@ -1,0 +1,54 @@
+version: '3.3'
+
+services:
+  mongodb:
+    image: 'mongo'
+    container_name: parse-mongodb
+    restart: always
+    ports:
+        - '27017:27017'
+    volumes:
+        - ./mongodb-data:/data/db
+    environment:
+        MONGODB_USER: ${MONGODB_USER}
+        MONGODB_PASS: ${MONGODB_PASS}
+
+  parse-server:
+    image: 'hellfire1980/parse-server'
+    container_name: parse-server
+    restart: always
+    ports:
+        - '80:1337'
+    links:
+        - mongodb
+    volumes:
+        - ./cloud:/parse/cloud
+    environment:
+        APP_ID: ${APP_ID}
+        MASTER_KEY: ${MASTER_KEY}
+        DATABASE_URI: ${DATABASE_URI}
+        serverURL: ${serverURL}
+        PARSE_PUBLIC_SERVER_URL: ${PARSE_PUBLIC_SERVER_URL}
+        PARSE_SERVER_APP_NAME: ${PARSE_SERVER_APP_NAME}
+        PARSE_SERVER_VERIFY_USER_EMAILS: ${PARSE_SERVER_VERIFY_USER_EMAILS}
+        MAILJET_API_KEY: ${MAILJET_API_KEY}
+        MAILJET_API_SECRET: ${MAILJET_API_SECRET}
+        MAILJET_ERROR_EMAIL: ${MAILJET_ERROR_EMAIL}
+        MAILJET_FROM_NAME: ${MAILJET_FROM_NAME}
+        MAILJET_FROM_EMAIL: ${MAILJET_FROM_EMAIL}
+
+  parse-dashboard:
+    image: 'parseplatform/parse-dashboard'
+    container_name: parse-dashboard
+    restart: always
+    ports:
+        - '4040:4040'
+    volumes:
+        - ./html:/app
+    environment:
+        PARSE_DASHBOARD_APP_ID: ${APP_ID}
+        PARSE_DASHBOARD_MASTER_KEY: ${MASTER_KEY}
+        PARSE_DASHBOARD_USER_ID: ${PARSE_DASHBOARD_USER_ID}
+        PARSE_DASHBOARD_USER_PASSWORD: ${PARSE_DASHBOARD_USER_PASSWORD}
+        PARSE_DASHBOARD_ALLOW_INSECURE_HTTP: ${PARSE_DASHBOARD_ALLOW_INSECURE_HTTP}
+        PARSE_DASHBOARD_SERVER_URL: ${serverURL}
