@@ -35,7 +35,7 @@ services:
         MAILJET_FROM_EMAIL: ${MAILJET_FROM_EMAIL}
 
   parse-dashboard:
-    image: 'parseplatform/parse-dashboard'
+    image: 'parseplatform/parse-dashboard:2.0.5'
     container_name: parse-dashboard
     restart: always
     ports:
